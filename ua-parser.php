@@ -19,7 +19,7 @@ class UAParserRegExp {
 	//////////
 
 	function has($str1, $str2) {
-		return is_string($str1) ? stripos($str1,$str2)!=0 : false;
+		return is_string($str1) ? stripos($str1,$str2)!==false : false;
 	}
 
 	function lowerize($str) {
@@ -113,17 +113,15 @@ class UAParserRegExp {
 	function strMapper($str, $map) {
 		foreach ($map as $i=>$v) {
 			// check if current value is array
-			if (is_array($v) && count($v) > 0) {
-				foreach($v as $vv) {
-					if ($this->has($str, $vv)) {
-						return ($i === '?') ? null : $i;
-					}
+			if (is_array($v)) {
+				if ($this->strMapper($str,$v)!==null) {
+					return ($i === '?') ? null : $i;
 				}
 			} elseif ($this->has($v, $str)) {
-				return ($i === "?") ? null : $i;
+				return ($i === '?') ? null : $i;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	///////////////
